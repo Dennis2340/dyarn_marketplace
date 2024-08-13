@@ -11,6 +11,7 @@ export async function POST(req: Request) {
     const userId = user?.id;
 
     if (!userId) return new Response("Unauthorized", { status: 401 });
+    
     const dbUser = await db.user.findFirst({
         where: { id: userId },
       });
@@ -58,6 +59,24 @@ export async function POST(req: Request) {
         headers: { 'Content-Type': 'application/json' },
       });
     }
+  } catch (error) {
+    console.log(error);
+    return new Response(JSON.stringify({ message: "Error Occurred", error }), {
+      status: 500,
+    });
+  }
+}
+
+export async function GET(req: Request) {
+  try {
+    const ratings = await db.rating.findMany({
+      include: { user: true, product: true },
+    });
+
+    return new Response(JSON.stringify(ratings), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    });
   } catch (error) {
     console.log(error);
     return new Response(JSON.stringify({ message: "Error Occurred", error }), {
