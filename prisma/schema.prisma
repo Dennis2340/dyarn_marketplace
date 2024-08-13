@@ -1,0 +1,70 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "postgresql"
+  url          = env("SUPABASE_DATABASE_URL")
+  directUrl    = env("SUPABASE_DIRECT_URL")
+  relationMode = "prisma"
+}
+
+model User {
+  id                   String         @id(map: "idx_User_PRIMARY") @unique(map: "idx_User_id_key") @db.VarChar(191)
+  name                 String
+  email                String         @unique(map: "idx_User_email_key")
+  products             Product[]
+  ratings              Rating[]
+  orders               Order[]        @relation("UserOrders")
+  paymentDetail        PaymentDetail? 
+  titleEmbedding       Float[]   
+  descriptionEmbedding Float[] 
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
+}
+
+model Product {
+  id          String   @id @default(uuid()) @db.VarChar(191)
+  title       String
+  description String
+  price       Float
+  imageUrl    String[]
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  ratings     Rating[]
+  orders      Order[]  @relation("ProductOrders")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Rating {
+  id        String   @id @default(uuid()) @db.VarChar(191)
+  value     Int // -1 for thumbs down, +1 for thumbs up
+  userId    String
+  productId String
+  user      User     @relation(fields: [userId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model Order {
+  id         String   @id @default(uuid()) @db.VarChar(191)
+  userId     String
+  productId  String
+  quantity   Int
+  totalPrice Float
+  createdAt  DateTime @default(now())
+
+  user       User     @relation(fields: [userId], references: [id], name: "UserOrders")
+  product    Product  @relation(fields: [productId], references: [id], name: "ProductOrders")
+}
+
+model PaymentDetail {
+  id                     String   @id @default(uuid()) @db.VarChar(191)
+  userId                 String   @unique
+  user                   User     @relation(fields: [userId], references: [id])
+  monimeSpaceId          String   // Local payment system ID
+  monimeAuthorizationKey String   // Authorization key for the local payment system
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+}
