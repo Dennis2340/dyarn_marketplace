@@ -22,19 +22,22 @@ model User {
 }
 
 model Product {
-  id          String   @id @default(uuid()) @db.VarChar(191)
-  title       String
-  description String
-  titleEmbedding       Float[]   
-  descriptionEmbedding Float[] 
-  price       Float
-  imageUrl    String[]
-  userId      String
-  user        User     @relation(fields: [userId], references: [id])
-  ratings     Rating[]
-  orders      Order[]  @relation("ProductOrders")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id                    String   @id @default(uuid()) @db.VarChar(191)
+  title                 String
+  description           String
+  titleEmbedding        Float[]   
+  descriptionEmbedding  Float[] 
+  price                 Float
+  imageUrl              String
+  userId                String
+  user                  User     @relation(fields: [userId], references: [id])
+  ratings               Rating[]
+  orders                Order[]  @relation("ProductOrders")
+  isPreorder            Boolean  @default(false)
+  preorderPrice         Float?   
+  preorderReleaseDate   DateTime?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
 }
 
 model Rating {

@@ -1,8 +1,15 @@
+import PoweredByGenelineX from "@/components/PoweredByGenelineX";
 import Image from "next/image";
 
 export default function Home() {
   return (
+    <>
+     {/* Powered by Geneline-X Component */}
+     <div className="flex flex-col mtjustify-end">
+       <PoweredByGenelineX />
+     </div>
     <main className="flex min-h-screen flex-col items-center justify-between p-24 bg-white text-blue-900">
+     
       {/* Hero Section */}
       <section className="w-full max-w-6xl text-center">
         <h1 className="text-4xl font-bold mb-4">Welcome to YarnCraft Marketplace</h1>
@@ -112,6 +119,10 @@ export default function Home() {
           Become a Seller
         </button>
       </section>
+
+      
+
     </main>
+    </>
   );
 }
