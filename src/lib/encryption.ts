@@ -1,9 +1,8 @@
-// lib/encryption-utils.ts
 import crypto from 'crypto';
 
 const algorithm = 'aes-256-cbc';
-const key = process.env.ENCRYPTION_KEY as string; // 32 bytes for AES-256
-const ivLength = 16; // AES block size in bytes
+const key = process.env.ENCRYPTION_KEY as string; 
+const ivLength = 16;
 
 function generateIv(): Buffer {
   return crypto.randomBytes(ivLength);

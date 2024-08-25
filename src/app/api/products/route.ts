@@ -14,11 +14,22 @@ export async function POST(req: Request) {
 
     if (!userId) return new Response("Unauthorized", { status: 401 });
     
-    const dbUser = await db.user.findFirst({
+    let dbUser = await db.user.findFirst({
         where: { id: userId },
       });
-    if (!dbUser) return new Response("Unauthorized", { status: 401 });
-  
+      
+    
+    if (!dbUser) {
+      dbUser = await db.user.create({
+          data: {
+              name: `${user.given_name} ${user.family_name}`,
+              id: user.id,
+              email: user?.email!,
+          },
+      });
+    };
+    
+    
     // embed the title, and description //
     const { titleEmbedding, descriptionEmbedding} = await getTitleDescriptionEmbeddings({title, description})
 
@@ -28,9 +39,9 @@ export async function POST(req: Request) {
         description,
         titleEmbedding: titleEmbedding,
         descriptionEmbedding: descriptionEmbedding,
-        price,
-        imageUrl,
-        user: { connect: { id: dbUser.id } },
+        price: Number(price),
+        imageUrl: imageUrl,
+        user: { connect: { id: dbUser?.id, email: dbUser?.email } },
       },
     });
 
@@ -67,48 +78,14 @@ export async function GET(req: Request) {
   }
 }
 
-export async function PUT(req: Request) {
-  try {
-    const body = await req.json();
-    const { id, title, description, price, imageUrl } = body;
 
-    const { getUser } = getKindeServerSession();
-    const user = await getUser();
-    const userId = user?.id;
-
-    if (!userId) return new Response("Unauthorized", { status: 401 });
-    if (!id) return new Response("Invalid product ID", { status: 400 });
-
-    // Check if the product belongs to the user
-    const existingProduct = await db.product.findUnique({
-      where: { id },
-    });
-
-    if (!existingProduct || existingProduct.userId !== userId) return new Response("Unauthorized", { status: 403 });
-
-    // Update the product
-    const updatedProduct = await db.product.update({
-      where: { id },
-      data: { title, description, price, imageUrl },
-    });
-
-    return new Response(JSON.stringify(updatedProduct), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' },
-    });
-  } catch (error) {
-    console.log(error);
-    return new Response(JSON.stringify({ message: "Error Occurred", error }), {
-      status: 500,
-    });
-  }
-}
 
 export async function DELETE(req: Request) {
   try {
     const body = await req.json();
     const { id } = body;
 
+    console.log(id)
     const { getUser } = getKindeServerSession();
     const user = await getUser();
     const userId = user?.id;
@@ -117,10 +94,13 @@ export async function DELETE(req: Request) {
     if (!id) return new Response("Invalid product ID", { status: 400 });
 
     // Check if the product belongs to the user
-    const existingProduct = await db.product.findUnique({
-      where: { id },
+    const existingProduct = await db.product.findFirst({
+      where: {
+        id: id,
+      },
     });
 
+    console.log(existingProduct)
     if (!existingProduct || existingProduct.userId !== userId) return new Response("Unauthorized", { status: 403 });
 
     // Delete the product
