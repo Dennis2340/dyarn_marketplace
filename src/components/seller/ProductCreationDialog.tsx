@@ -49,10 +49,12 @@ const ProductCreationCard: React.FC<ProductCreationCardProps> = ({ onProductCrea
       const res = await startUpload([image]);
       const [responseFile] = res || [];
       console.log(responseFile.url)
-      setFormData((prevData) => ({
-        ...prevData,
-        imageUrl: responseFile.url,
-      }));
+      if (responseFile && responseFile.url) {
+        setFormData((prevData) => ({
+          ...prevData,
+          imageUrl: responseFile.url,
+        }));
+      }
       console.log(formData)
     }
   };
@@ -74,6 +76,16 @@ const ProductCreationCard: React.FC<ProductCreationCardProps> = ({ onProductCrea
         console.log("Product created successfully");
         setIsModalOpen(false);
         onProductCreated();
+        // set state to null
+        setFormData({
+          title: "",
+          description: "",
+          price: 0,
+          imageUrl: "",
+          isPreorder: false,
+          preorderPrice: 0,
+          preorderReleaseDate: ""
+        })
       }
     } catch (error) {
       console.error("Error creating product:", error);

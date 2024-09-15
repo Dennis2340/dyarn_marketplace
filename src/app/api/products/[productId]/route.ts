@@ -60,7 +60,7 @@ export async function PUT(req: Request, { params }: { params: { productId: strin
         title, 
         description, 
         price, 
-        imageUrl,
+        imageUrl:imageUrl,
         titleEmbedding,
         descriptionEmbedding,
       },

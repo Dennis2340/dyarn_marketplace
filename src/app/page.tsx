@@ -1,5 +1,9 @@
+"use client"
 import PoweredByGenelineX from "@/components/PoweredByGenelineX";
 import Image from "next/image";
+//@ts-ignore
+import {ConfigurableChatbot } from '@denno1000/genistudio-package'
+import React from "react";
 
 export default function Home() {
   return (
@@ -9,7 +13,7 @@ export default function Home() {
        <PoweredByGenelineX />
      </div>
     <main className="flex min-h-screen flex-col items-center justify-between p-24 bg-white text-blue-900">
-     
+      <ConfigurableChatbot chatbotId={'clzbl9w3g000hgkbqpkeb64on'}/>
       {/* Hero Section */}
       <section className="w-full max-w-6xl text-center">
         <h1 className="text-4xl font-bold mb-4">Welcome to YarnCraft Marketplace</h1>

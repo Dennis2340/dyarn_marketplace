@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@denno1000/genistudio-package": "^0.1.0",
     "@google/generative-ai": "^0.17.0",
     "@kinde-oss/kinde-auth-nextjs": "^2.3.6",
     "@prisma/client": "^5.18.0",

@@ -31,6 +31,9 @@ const Sidebar = () => {
             <a href="#" className="block py-2 px-4 rounded hover:bg-blue-700">
               Dashboard Overview
             </a>
+            <a href="/sellerdashboard/payment-details" className="block py-2 px-4 rounded hover:bg-blue-700">
+              Payment Details
+            </a>
             <a href="/sellerdashboard/products" className="block py-2 px-4 rounded hover:bg-blue-700">
               Products
             </a>
